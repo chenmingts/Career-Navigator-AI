@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from dotenv import load_dotenv
-from sentence_transformers import SentenceTransformer
+from huggingface_hub import InferenceClient
 from pinecone import Pinecone
 
 
@@ -18,7 +18,7 @@ def load_api_key():
 # Load Embedding Model
 @st.cache_resource
 def load_embed_model():
-    return SentenceTransformer("all-MiniLM-L6-v2")
+    return InferenceClient(model="sentence-transformers/all-MiniLM-L6-v2")
 
 
 # Initialize Pinecone
@@ -35,7 +35,7 @@ def init_pinecone(api_key):
 
 # Perform semantic search
 def search_vectors(index, model, query, category, top_k=5):
-    vector = model.encode(query).tolist()
+    vector = model.feature_extraction(query)
 
     if category == "resume":
         filter_expr = {"source": {"$eq": "resume"}}
