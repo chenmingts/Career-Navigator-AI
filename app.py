@@ -2,7 +2,7 @@ import os
 import streamlit as st
 from dotenv import load_dotenv
 from huggingface_hub import InferenceClient
-from pinecone import Pinecone
+import pinecone
 
 
 
@@ -24,13 +24,14 @@ def load_embed_model():
 # Initialize Pinecone
 @st.cache_resource
 def init_pinecone(api_key):
-    pc = Pinecone(api_key=api_key)
+    pinecone.init(api_key=api_key)
 
-    if "career-navigator-index" not in pc.list_indexes():
+    if "career-navigator-index" not in pinecone.list_indexes():
         st.error("Pinecone index 'career-navigator-index' does not exist. Please create it first.")
         st.stop()
 
-    return pc
+    return pinecone
+
 
 
 # Perform semantic search
@@ -89,7 +90,7 @@ def main():
                 pc = Pinecone(api_key=api_key)
 
                 # Connect to the index
-                index = pc.Index("career-navigator-index")
+                index = pinecone.Index("career-navigator-index")
 
                 matches = search_vectors(index, model, query, category, top_k)
                 results = [format_result(m) for m in matches]
