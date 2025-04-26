@@ -1,5 +1,5 @@
 streamlit==1.31.1
-huggingface_hub==0.14.1
+huggingface_hub==0.20.3
 pinecone-client==2.2.4
 tqdm==4.66.1
 python-dotenv==1.0.1
