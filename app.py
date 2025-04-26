@@ -87,7 +87,7 @@ def main():
                 model = load_embed_model()
 
                 # Initialize Pinecone client
-                pc = Pinecone(api_key=api_key)
+                init_pinecone(api_key=api_key)
 
                 # Connect to the index
                 index = pinecone.Index("career-navigator-index")
