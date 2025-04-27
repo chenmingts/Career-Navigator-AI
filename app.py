@@ -30,16 +30,29 @@ def init_pinecone(api_key):
             api_key=api_key,
             environment="us-east-1-aws"
         )
-
-        indexes = pinecone.list_indexes()
-        if "career-navigator-index" not in indexes:
-            st.error("Pinecone index 'career-navigator-index' does not exist. Please create it first.")
-            st.stop()
+        
+        # Retry listing indexes for up to 10 seconds
+        timeout_seconds = 10
+        start_time = time.time()
+        while True:
+            try:
+                indexes = pinecone.list_indexes()
+                if "career-navigator-index" in indexes:
+                    break
+                else:
+                    if time.time() - start_time > timeout_seconds:
+                        st.error("Pinecone index 'career-navigator-index' does not exist after timeout. Please check Pinecone Console.")
+                        st.stop()
+                    time.sleep(1)
+            except Exception as e:
+                if time.time() - start_time > timeout_seconds:
+                    st.error(f"Pinecone connection timeout: {str(e)}")
+                    st.stop()
+                time.sleep(1)
 
     except Exception as e:
         st.error(f"Pinecone connection failed: {str(e)}")
         st.stop()
-
 
 
 
