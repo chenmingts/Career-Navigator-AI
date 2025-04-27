@@ -95,7 +95,8 @@ def main():
                 init_pinecone(api_key=api_key)
 
                 # Connect to the index
-                index = pinecone.Index("career-navigator-index")
+                index = pinecone.Index("career-navigator-index", host="https://career-navigator-index-9i95ecm.svc.aped-4627-b74a.pinecone.io")
+
 
                 matches = search_vectors(index, model, query, category, top_k)
                 results = [format_result(m) for m in matches]
