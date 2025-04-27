@@ -25,32 +25,34 @@ def load_embed_model():
 # Initialize Pinecone
 @st.cache_resource
 def init_pinecone(api_key):
+    st.info("🔄 Connecting to Pinecone... please wait up to 30 seconds.")
     try:
         pinecone.init(
             api_key=api_key,
             environment="us-east-1-aws"
         )
         
-        timeout_seconds = 30  # <--- increased from 10 to 20 seconds
+        timeout_seconds = 30  # Increase timeout to 30 seconds
         start_time = time.time()
         while True:
             try:
                 indexes = pinecone.list_indexes()
                 if "career-navigator-index" in indexes:
+                    st.success("✅ Connected to Pinecone successfully!")
                     break
                 else:
                     if time.time() - start_time > timeout_seconds:
-                        st.error("Pinecone index 'career-navigator-index' does not exist after timeout. Please check Pinecone Console.")
+                        st.error("❌ Timeout: Pinecone index 'career-navigator-index' does not exist. Please check Pinecone Console.")
                         st.stop()
                     time.sleep(1)
             except Exception as e:
                 if time.time() - start_time > timeout_seconds:
-                    st.error(f"Pinecone connection timeout: {str(e)}")
+                    st.error(f"❌ Timeout connecting to Pinecone: {str(e)}")
                     st.stop()
                 time.sleep(1)
 
     except Exception as e:
-        st.error(f"Pinecone connection failed: {str(e)}")
+        st.error(f"❌ Pinecone connection failed: {str(e)}")
         st.stop()
 
 
