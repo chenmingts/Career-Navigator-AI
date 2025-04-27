@@ -31,7 +31,7 @@ def init_pinecone(api_key):
             environment="us-east-1-aws"
         )
         
-        timeout_seconds = 20  # <--- increased from 10 to 20 seconds
+        timeout_seconds = 30  # <--- increased from 10 to 20 seconds
         start_time = time.time()
         while True:
             try:
