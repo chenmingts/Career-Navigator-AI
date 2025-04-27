@@ -3,6 +3,7 @@ import streamlit as st
 from dotenv import load_dotenv
 from huggingface_hub import InferenceClient
 import pinecone
+import time
 
 
 
@@ -24,17 +25,32 @@ def load_embed_model():
 # Initialize Pinecone
 @st.cache_resource
 def init_pinecone(api_key):
-    pinecone.init(
-        api_key=api_key,
-        environment="us-east-1-aws"
-    )
+    try:
+        pinecone.init(
+            api_key=api_key,
+            environment="us-east-1-aws"
+        )
+        
+        # Try to connect and list indexes with timeout
+        timeout_seconds = 10
+        start_time = time.time()
+        while True:
+            try:
+                indexes = pinecone.list_indexes()
+                break
+            except Exception as e:
+                if time.time() - start_time > timeout_seconds:
+                    st.error("Timeout connecting to Pinecone. Please try again later.")
+                    st.stop()
+                time.sleep(1)  # Wait 1 second and retry
+        
+        if "career-navigator-index" not in indexes:
+            st.error("Pinecone index 'career-navigator-index' does not exist. Please create it first.")
+            st.stop()
 
-    if "career-navigator-index" not in pinecone.list_indexes():
-        st.error("Pinecone index 'career-navigator-index' does not exist. Please create it first.")
+    except Exception as e:
+        st.error(f"Pinecone connection failed: {str(e)}")
         st.stop()
-
-    return pinecone
-
 
 
 
