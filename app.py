@@ -30,22 +30,20 @@ def init_pinecone(api_key):
             api_key=api_key,
             environment="us-east-1-aws"
         )
-        
+
         indexes = pinecone.list_indexes()
         if "career-navigator-index" not in indexes:
-            # create index automatically
             pinecone.create_index(
                 name="career-navigator-index",
-                dimension=384,   # set your correct dimension
-                metric="cosine",
-                cloud="aws",
-                region="us-east-1"
+                dimension=384,
+                metric="cosine"
             )
             st.success("Created career-navigator-index automatically!")
 
     except Exception as e:
         st.error(f"Pinecone connection failed: {str(e)}")
         st.stop()
+
 
 
 
