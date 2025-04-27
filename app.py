@@ -33,16 +33,13 @@ def init_pinecone(api_key):
 
         indexes = pinecone.list_indexes()
         if "career-navigator-index" not in indexes:
-            pinecone.create_index(
-                name="career-navigator-index",
-                dimension=384,
-                metric="cosine"
-            )
-            st.success("Created career-navigator-index automatically!")
+            st.error("Pinecone index 'career-navigator-index' does not exist. Please create it first.")
+            st.stop()
 
     except Exception as e:
         st.error(f"Pinecone connection failed: {str(e)}")
         st.stop()
+
 
 
 
