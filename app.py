@@ -26,7 +26,7 @@ def load_embed_model():
 def init_pinecone(api_key):
     pinecone.init(
         api_key=api_key,
-        environment="us-east-1"   # <-- add this line
+        environment="us-east-1-aws" 
     )
 
     if "career-navigator-index" not in pinecone.list_indexes():
