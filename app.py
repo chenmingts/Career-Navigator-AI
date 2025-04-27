@@ -31,8 +31,7 @@ def init_pinecone(api_key):
             environment="us-east-1-aws"
         )
         
-        # Retry listing indexes for up to 10 seconds
-        timeout_seconds = 10
+        timeout_seconds = 20  # <--- increased from 10 to 20 seconds
         start_time = time.time()
         while True:
             try:
@@ -53,6 +52,7 @@ def init_pinecone(api_key):
     except Exception as e:
         st.error(f"Pinecone connection failed: {str(e)}")
         st.stop()
+
 
 
 
