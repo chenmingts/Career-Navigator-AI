@@ -24,13 +24,17 @@ def load_embed_model():
 # Initialize Pinecone
 @st.cache_resource
 def init_pinecone(api_key):
-    pinecone.init(api_key=api_key)
+    pinecone.init(
+        api_key=api_key,
+        environment="us-east-1"   # <-- add this line
+    )
 
     if "career-navigator-index" not in pinecone.list_indexes():
         st.error("Pinecone index 'career-navigator-index' does not exist. Please create it first.")
         st.stop()
 
     return pinecone
+
 
 
 
